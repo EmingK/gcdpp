@@ -28,6 +28,18 @@ if(NOT APPLE)
     )
 endif()
 
+include(GNUInstallDirs)
+file(GLOB GCDPP_INCLUDE_FILES "src/include/gcdpp/*.h")
+install(
+  TARGETS gcdpp
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
+install(
+  FILES ${GCDPP_INCLUDE_FILES}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gcdpp)
+
 option(BUIULD_TESTS "Build test programs" OFF)
 if (BUILD_TESTS)
   add_executable(gcdpp_test
