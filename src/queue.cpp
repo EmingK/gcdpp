@@ -38,4 +38,14 @@ void DispatchQueue::asyncAfter(DispatchTime dt, DispatchWork&& work) const {
     dispatch_after_f(dt._dt, _dobject, wrapper, &DispatchWorkWrapperInvokeAndDelete);
 }
 
+void DispatchQueue::barrierSync(DispatchWork&& work) const {
+    DispatchWorkWrapper *wrapper = new DispatchWorkWrapper(std::move(work));
+    dispatch_barrier_sync_f(_dobject, wrapper, &DispatchWorkWrapperInvokeAndDelete);
+}
+
+void DispatchQueue::barrierAsync(DispatchWork&& work) const {
+    DispatchWorkWrapper *wrapper = new DispatchWorkWrapper(std::move(work));
+    dispatch_barrier_async_f(_dobject, wrapper, &DispatchWorkWrapperInvokeAndDelete);
+}
+
 GCDPP_NS_END

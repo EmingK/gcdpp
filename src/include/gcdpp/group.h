@@ -6,6 +6,7 @@
 #include "common.h"
 #include "object.h"
 #include "queue.h"
+#include "time.h"
 
 GCDPP_NS_BEGIN
 
@@ -18,7 +19,14 @@ public:
 
     void leave() const;
 
-    void notify(DispatchQueue const &dq, DispatchWork&& work) const;
+    void notify(DispatchQueue const &dq, DispatchWork &&work) const;
+
+    void async(DispatchQueue const &dq, DispatchWork &&work) const;
+
+    /// @returns true if timeout
+    ///
+    /// Warning: this method is synchornous
+    bool wait(DispatchTime timeout) const;
 };
 
 GCDPP_NS_END

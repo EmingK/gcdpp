@@ -3,9 +3,11 @@
 #ifndef __OBJECT_H_
 #define __OBJECT_H_
 
+#include "common.h"
 #include <dispatch/dispatch.h>
-
 #include <cassert>
+
+GCDPP_NS_BEGIN
 
 template<typename Tdo>
 struct DispatchObject {
@@ -46,5 +48,7 @@ struct DispatchObject {
             return _dobject;
         }
 };
+
+GCDPP_NS_END
 
 #endif // __OBJECT_H_
