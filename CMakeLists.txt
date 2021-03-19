@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(gcdpp)
 
-if(NOT APPLE)
-  include(cmake/FindDispatch.cmake)
-endif()
-
 add_library(gcdpp STATIC
   src/work.cpp
   src/queue.cpp
@@ -24,7 +20,7 @@ target_include_directories(
 if(NOT APPLE)
   target_include_directories(
     gcdpp PUBLIC
-    ${LIBDISPATCH_INCLUDE_DIR}
+    ${GCDPP_LIBDISPATCH_DIR}/include
     )
 endif()
 
@@ -47,5 +43,11 @@ if (BUILD_TESTS)
     )
 
   add_dependencies(gcdpp_test gcdpp)
+  target_link_directories(gcdpp_test PRIVATE
+    ${GCDPP_LIBDISPATCH_DIR}/lib
+    )
   target_link_libraries(gcdpp_test gcdpp)
+  if (NOT APPLE)
+    target_link_libraries(gcdpp_test dispatch BlocksRuntime)
+  endif()
 endif()

@@ -1,3 +1,4 @@
+#include "gcdpp/queue.h"
 #include <gcdpp/gcdpp.h>
 
 #include <iostream>
@@ -5,6 +6,8 @@
 using namespace gcdpp;
 
 int main() {
+    DispatchQueue dq("com.test");
+
     DispatchGroup dg;
 
     dg.enter();
@@ -23,7 +26,7 @@ int main() {
         dg.leave();
     });
 
-    dg.notify(DispatchQueue::main(), []() {
+    dg.notify(dq, []() {
         std::cout << "done\n";
     });
 
