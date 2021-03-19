@@ -14,6 +14,8 @@ GCDPP_NS_BEGIN
 struct DispatchSemaphore : DispatchObject<dispatch_semaphore_t> {
     using Base = DispatchObject<dispatch_semaphore_t>;
 public:
+    using Base::Base;
+
     DispatchSemaphore(intptr_t value);
 
     /// @returns true if another thread is awoken

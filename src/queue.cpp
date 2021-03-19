@@ -48,4 +48,8 @@ void DispatchQueue::barrierAsync(DispatchWork&& work) const {
     dispatch_barrier_async_f(_dobject, wrapper, &DispatchWorkWrapperInvokeAndDelete);
 }
 
+std::string const DispatchQueue::label() const {
+    return dispatch_queue_get_label(_dobject);
+}
+
 GCDPP_NS_END

@@ -59,7 +59,7 @@ public:
 
     void barrierAsync(DispatchWork &&work) const;
 
-    std::string const *label() const;
+    std::string const label() const;
 
     template<typename T>
     static T &getCurrentSpecific(DispatchSpecificKey<T> const &key) {

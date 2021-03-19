@@ -13,6 +13,8 @@ GCDPP_NS_BEGIN
 struct DispatchGroup : DispatchObject<dispatch_group_t> {
     using Base = DispatchObject<dispatch_group_t>;
 public:
+    using Base::Base;
+
     DispatchGroup();
 
     void enter() const;

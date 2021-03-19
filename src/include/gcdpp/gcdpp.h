@@ -8,5 +8,6 @@
 #include "queue.h"
 #include "group.h"
 #include "semaphore.h"
+#include "data.h"
 
 #endif // __GCDPP_H_

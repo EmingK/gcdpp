@@ -6,6 +6,7 @@ add_library(gcdpp STATIC
   src/queue.cpp
   src/group.cpp
   src/semaphore.cpp
+  src/data.cpp
   )
 
 target_compile_features(
