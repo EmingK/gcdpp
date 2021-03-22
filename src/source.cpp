@@ -65,11 +65,11 @@ void DispatchSource::activate() const {
 }
 
 void DispatchSource::cancel() const {
-    dispatch_cancel(_dobject);
+    dispatch_source_cancel(_dobject);
 }
 
 bool DispatchSource::isCancelled() const {
-    return dispatch_testcancel(_dobject) != 0;
+    return dispatch_source_testcancel(_dobject) != 0;
 }
 
 uintptr_t DispatchSource::data() const {
