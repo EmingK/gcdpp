@@ -9,5 +9,6 @@
 #include "group.h"
 #include "semaphore.h"
 #include "data.h"
+#include "source.h"
 
 #endif // __GCDPP_H_

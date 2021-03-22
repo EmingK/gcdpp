@@ -11,7 +11,7 @@
 
 GCDPP_NS_BEGIN
 
-struct DispatchSemaphore : DispatchObject<dispatch_semaphore_t> {
+struct DispatchSemaphore : public DispatchObject<dispatch_semaphore_t> {
     using Base = DispatchObject<dispatch_semaphore_t>;
 public:
     using Base::Base;

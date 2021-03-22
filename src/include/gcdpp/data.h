@@ -11,7 +11,7 @@
 
 GCDPP_NS_BEGIN
 
-struct DispatchData : DispatchObject<dispatch_data_t> {
+struct DispatchData : public DispatchObject<dispatch_data_t> {
     using Base = DispatchObject<dispatch_data_t>;
 public:
     using Base::Base;
