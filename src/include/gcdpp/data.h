@@ -54,11 +54,16 @@ public:
     std::vector<unsigned char> copyToVector() const;
 
 private:
+#ifdef __BLOCKS__
+    using DispatchDataDestroyerType = dispatch_block_t;
+#else
+    using DispatchDataDestroyerType = dispatch_function_t;
+#endif
     DispatchData(
         void const *buffer,
         size_t size,
         DispatchQueue const &destroyerQueue,
-        dispatch_function_t destroyer);
+        DispatchDataDestroyerType destroyer);
 };
 
 namespace DispatchDataDestroyer {

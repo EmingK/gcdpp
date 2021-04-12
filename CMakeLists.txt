@@ -19,7 +19,12 @@ target_include_directories(
   gcdpp PUBLIC
   src/include
   )
-if(NOT APPLE)
+if(APPLE)
+  target_compile_options(
+    gcdpp PRIVATE
+    -fblocks
+    )
+else()
   target_include_directories(
     gcdpp PUBLIC
     ${GCDPP_LIBDISPATCH_DIR}/include

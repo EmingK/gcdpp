@@ -1,7 +1,10 @@
 #include <cstring>
 #include <gcdpp/data.h>
 
-// form private header
+#ifdef __BLOCKS__
+#define dispatch_data_create_f dispatch_data_create
+#else
+// from private header
 extern "C"
 dispatch_data_t
 dispatch_data_create_f(const void *buffer,
@@ -16,13 +19,14 @@ extern "C"
 bool
 dispatch_data_apply_f(dispatch_data_t data, void * context,
                       dispatch_data_applier_function_t applier);
+#endif
 
 GCDPP_NS_BEGIN
 
 DispatchData::DispatchData()
     : Base(dispatch_data_empty) {}
 
-DispatchData::DispatchData(void const *buffer, size_t size, DispatchQueue const &destroyerQueue, dispatch_function_t destroyer)
+DispatchData::DispatchData(void const *buffer, size_t size, DispatchQueue const &destroyerQueue, DispatchDataDestroyerType destroyer)
     : Base(dispatch_data_create_f(buffer, size, destroyerQueue.nativeHandle(), destroyer)) {}
 
 DispatchData::DispatchData(void const *buffer, size_t size, DispatchQueue const &destroyerQueue)
@@ -41,7 +45,7 @@ DispatchData DispatchData::create<DispatchDataDestroyer::Free>(
     void const *buffer,
     size_t size,
     DispatchQueue const &destroyerQueue) {
-    return DispatchData(buffer, size, destroyerQueue, (dispatch_function_t)DISPATCH_DATA_DESTRUCTOR_FREE);
+    return DispatchData(buffer, size, destroyerQueue, (DispatchDataDestroyerType)DISPATCH_DATA_DESTRUCTOR_FREE);
 }
 
 template<>
@@ -49,7 +53,7 @@ DispatchData DispatchData::create<DispatchDataDestroyer::Munmap>(
     void const *buffer,
     size_t size,
     DispatchQueue const &destroyerQueue) {
-    return DispatchData(buffer, size, destroyerQueue, (dispatch_function_t)DISPATCH_DATA_DESTRUCTOR_MUNMAP);
+    return DispatchData(buffer, size, destroyerQueue, (DispatchDataDestroyerType)DISPATCH_DATA_DESTRUCTOR_MUNMAP);
 }
 
 DispatchData DispatchData::concat(DispatchData const &data1, DispatchData const &data2) {
@@ -69,12 +73,16 @@ size_t DispatchData::copyBytes(void *buffer, size_t count) const {
         void *buffer;
         size_t remaining;
     };
-    DispatchDataApplyContext ctx {
+    DispatchDataApplyContext context {
         buffer, count
     };
-    dispatch_data_apply_f(_dobject, &ctx, [](void *_ctx, dispatch_data_t dd, size_t offset, const void *buffer, size_t size) {
+#ifdef __BLOCKS__
+    DispatchDataApplyContext *ctx = &context;
+    dispatch_data_apply(_dobject, ^bool(dispatch_data_t dd, size_t offset, const void *buffer, size_t size) {
+#else
+    dispatch_data_apply_f(_dobject, &context, [](void *_ctx, dispatch_data_t dd, size_t offset, const void *buffer, size_t size) {
         DispatchDataApplyContext *ctx = reinterpret_cast<DispatchDataApplyContext *>(_ctx);
-
+#endif
         bool result = true;
         size_t copySize = size;
         if (size > ctx->remaining) {
@@ -86,7 +94,7 @@ size_t DispatchData::copyBytes(void *buffer, size_t count) const {
         ctx->remaining -= copySize;
         return result;;
     });
-    return count - ctx.remaining;
+    return count - context.remaining;
 }
 
 std::vector<unsigned char> DispatchData::copyToVector() const {
